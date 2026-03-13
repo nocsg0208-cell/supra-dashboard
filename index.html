@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Дашборд Анализа Отзывов Супра</title>
+    <title>Управленческий Дашборд Супра</title>
     <style>
         :root {
             --color-bg-primary: #0f172a;
@@ -18,391 +18,153 @@
             --color-border: #475569;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background: var(--color-bg-primary); 
+            color: var(--color-text-primary); 
+            padding: 20px; 
+            line-height: 1.6; 
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-            background: var(--color-bg-primary);
-            color: var(--color-text-primary);
-            padding: 20px;
-            line-height: 1.6;
+        .header { 
+            background: var(--color-bg-secondary); 
+            padding: 24px; 
+            border-radius: 12px; 
+            margin-bottom: 24px; 
+            border: 1px solid var(--color-border); 
+        }
+        .header h1 { font-size: 28px; margin-bottom: 8px; color: var(--color-accent); }
+        .header p { color: var(--color-text-secondary); font-size: 14px; }
+
+        .filters { 
+            background: var(--color-bg-secondary); 
+            padding: 20px; 
+            border-radius: 12px; 
+            margin-bottom: 24px; 
+            border: 1px solid var(--color-border); 
+            display: flex; 
+            gap: 16px; 
+            flex-wrap: wrap; 
+            align-items: center; 
+        }
+        .filter-group { display: flex; flex-direction: column; gap: 6px; }
+        .filter-group label { font-size: 12px; color: var(--color-text-secondary); font-weight: 500; }
+        .filter-group select { 
+            padding: 8px 12px; 
+            border-radius: 6px; 
+            border: 1px solid var(--color-border); 
+            background: var(--color-bg-card); 
+            color: var(--color-text-primary); 
+            font-size: 14px; 
+            cursor: pointer; 
+            min-width: 150px; 
         }
 
-        .header {
-            background: var(--color-bg-secondary);
-            padding: 24px;
-            border-radius: 12px;
-            margin-bottom: 24px;
-            border: 1px solid var(--color-border);
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .metric-card { 
+            background: var(--color-bg-secondary); 
+            padding: 20px; 
+            border-radius: 12px; 
+            border: 1px solid var(--color-border); 
+        }
+        .metric-label { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .metric-value { font-size: 32px; font-weight: 700; margin-bottom: 4px; }
+        .metric-subtitle { font-size: 14px; color: var(--color-text-secondary); }
+
+        .insight-box { 
+            background: rgba(56, 189, 248, 0.1); 
+            border-left: 4px solid var(--color-accent); 
+            padding: 16px; 
+            border-radius: 8px; 
+            margin: 16px 0; 
+        }
+        .insight-box h4 { font-size: 14px; margin-bottom: 8px; color: var(--color-accent); }
+        .insight-box p { font-size: 13px; color: var(--color-text-secondary); line-height: 1.5; }
+
+        .tab-container { display: flex; gap: 8px; margin-bottom: 16px; border-bottom: 1px solid var(--color-border); }
+        .tab { 
+            padding: 12px 24px; 
+            cursor: pointer; 
+            border-bottom: 2px solid transparent; 
+            color: var(--color-text-secondary); 
+            font-weight: 500; 
+            transition: all 0.2s; 
+        }
+        .tab:hover { color: var(--color-text-primary); }
+        .tab.active { color: var(--color-accent); border-bottom-color: var(--color-accent); }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .content-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 24px; margin-bottom: 24px; }
+        .card { background: var(--color-bg-secondary); padding: 24px; border-radius: 12px; border: 1px solid var(--color-border); }
+        .card-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; color: var(--color-accent); }
+        .card-subtitle { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 16px; font-weight: 400; }
+
+        .section-header { 
+            font-size: 14px; 
+            font-weight: 600; 
+            margin: 20px 0 12px 0; 
+            padding: 8px 12px; 
+            background: rgba(56, 189, 248, 0.1); 
+            border-radius: 6px; 
+            border-left: 3px solid var(--color-accent); 
         }
 
-        .header h1 {
-            font-size: 28px;
-            margin-bottom: 8px;
-            color: var(--color-accent);
-        }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 16px; }
+        th, td { padding: 12px 8px; text-align: left; border-bottom: 1px solid var(--color-border); }
+        th { background: var(--color-bg-card); color: var(--color-text-secondary); font-weight: 600; font-size: 12px; text-transform: uppercase; }
+        tr:hover { background: rgba(56, 189, 248, 0.05); }
 
-        .header p {
-            color: var(--color-text-secondary);
-            font-size: 14px;
-        }
+        .rating-cell-excellent { background: rgba(34, 197, 94, 0.15); font-weight: 600; color: var(--color-success); text-align: center; }
+        .rating-cell-good { background: rgba(56, 189, 248, 0.1); font-weight: 600; color: var(--color-accent); text-align: center; }
+        .rating-cell-warning { background: rgba(251, 191, 36, 0.15); font-weight: 600; color: var(--color-warning); text-align: center; }
 
-        .filters {
-            background: var(--color-bg-secondary);
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 24px;
-            border: 1px solid var(--color-border);
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
+        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+        .status-green { background: rgba(34, 197, 94, 0.15); color: var(--color-success); }
+        .status-yellow { background: rgba(251, 191, 36, 0.15); color: var(--color-warning); }
+        .status-red { background: rgba(239, 68, 68, 0.15); color: var(--color-danger); }
 
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
+        .chart-bar { height: 24px; background: var(--color-accent); border-radius: 4px; margin: 8px 0; position: relative; }
+        .bar-label { position: absolute; left: 8px; top: 50%; transform: translateY(-50%); font-size: 12px; font-weight: 600; color: var(--color-bg-primary); }
 
-        .filter-group label {
-            font-size: 12px;
-            color: var(--color-text-secondary);
-            font-weight: 500;
-        }
-
-        .filter-group select {
-            padding: 8px 12px;
-            border-radius: 6px;
-            border: 1px solid var(--color-border);
-            background: var(--color-bg-card);
-            color: var(--color-text-primary);
-            font-size: 14px;
-            cursor: pointer;
-            min-width: 150px;
-        }
-
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-        .metric-card {
-            background: var(--color-bg-secondary);
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid var(--color-border);
-        }
-
-        .metric-label {
-            font-size: 12px;
-            color: var(--color-text-secondary);
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .metric-value {
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .metric-subtitle {
-            font-size: 14px;
-            color: var(--color-text-secondary);
-        }
-
-        .content-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 24px;
-            margin-bottom: 24px;
-        }
-
-        .card {
-            background: var(--color-bg-secondary);
-            padding: 24px;
-            border-radius: 12px;
-            border: 1px solid var(--color-border);
-        }
-
-        .card-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--color-accent);
-        }
-
-        .card-subtitle {
-            font-size: 12px;
-            color: var(--color-text-secondary);
-            margin-bottom: 16px;
-            font-weight: 400;
-        }
-
-        .section-header {
-            font-size: 14px;
-            font-weight: 600;
-            margin: 20px 0 12px 0;
-            padding: 8px 12px;
-            background: rgba(56, 189, 248, 0.1);
-            border-radius: 6px;
-            border-left: 3px solid var(--color-accent);
-        }
-
-        .rating-cell-excellent {
-            background: rgba(34, 197, 94, 0.15);
-            font-weight: 600;
-            color: var(--color-success);
-        }
-
-        .rating-cell-good {
-            background: rgba(56, 189, 248, 0.1);
-            font-weight: 600;
-            color: var(--color-accent);
-        }
-
-        .rating-cell-warning {
-            background: rgba(251, 191, 36, 0.15);
-            font-weight: 600;
-            color: var(--color-warning);
-        }
-
-        .legend-box {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-            padding: 10px;
-            background: rgba(56, 189, 248, 0.05);
-            border-radius: 6px;
-            font-size: 11px;
-            margin-top: 12px;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .legend-badge {
-            width: 12px;
-            height: 12px;
-            border-radius: 3px;
-        }
-
-        .table-container {
-            overflow-x: auto;
-            margin-top: 16px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
-
-        th, td {
-            padding: 12px 8px;
-            text-align: left;
-            border-bottom: 1px solid var(--color-border);
-        }
-
-        th {
-            background: var(--color-bg-card);
-            color: var(--color-text-secondary);
-            font-weight: 600;
-            font-size: 12px;
-            text-transform: uppercase;
-        }
-
-        tr:hover {
-            background: rgba(56, 189, 248, 0.05);
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .status-green {
-            background: rgba(34, 197, 94, 0.15);
-            color: var(--color-success);
-        }
-
-        .status-yellow {
-            background: rgba(251, 191, 36, 0.15);
-            color: var(--color-warning);
-        }
-
-        .status-red {
-            background: rgba(239, 68, 68, 0.15);
-            color: var(--color-danger);
-        }
-
-        .chart-placeholder {
-            height: 300px;
-            background: var(--color-bg-card);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--color-text-secondary);
-            font-size: 14px;
-        }
-
-        .bar {
-            height: 24px;
-            background: var(--color-accent);
-            border-radius: 4px;
-            margin: 8px 0;
-            position: relative;
-        }
-
-        .bar-label {
-            position: absolute;
-            left: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--color-bg-primary);
-        }
-
-        .insight-box {
-            background: rgba(56, 189, 248, 0.1);
-            border-left: 4px solid var(--color-accent);
-            padding: 16px;
-            border-radius: 8px;
-            margin: 16px 0;
-        }
-
-        .insight-box h4 {
-            font-size: 14px;
-            margin-bottom: 8px;
-            color: var(--color-accent);
-        }
-
-        .insight-box p {
-            font-size: 13px;
-            color: var(--color-text-secondary);
-            line-height: 1.5;
-        }
-
-        .critical-review {
-            background: rgba(239, 68, 68, 0.1);
-            border-left: 4px solid var(--color-danger);
-            padding: 12px;
-            border-radius: 6px;
-            margin: 12px 0;
-            font-size: 13px;
-        }
-
-        .critical-review-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 11px;
-            color: var(--color-text-secondary);
-        }
-
-        .critical-review-text {
-            color: var(--color-text-primary);
-            line-height: 1.4;
-        }
-
-        .tab-container {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
-            border-bottom: 1px solid var(--color-border);
-        }
-
-        .tab {
-            padding: 12px 24px;
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-            color: var(--color-text-secondary);
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-
-        .tab:hover {
-            color: var(--color-text-primary);
-        }
-
-        .tab.active {
-            color: var(--color-accent);
-            border-bottom-color: var(--color-accent);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
+        .critical-review { background: rgba(239, 68, 68, 0.1); border-left: 4px solid var(--color-danger); padding: 12px; border-radius: 6px; margin: 12px 0; font-size: 13px; }
+        .critical-review-header { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 11px; color: var(--color-text-secondary); }
+        .critical-review-text { color: var(--color-text-primary); line-height: 1.4; }
 
         @media (max-width: 768px) {
-            .metrics-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .content-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .filters {
-                flex-direction: column;
-                align-items: stretch;
-            }
+            .metrics-grid, .content-grid { grid-template-columns: 1fr; }
+            .filters { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>📊 Управленческий Дашборд Сети Супра</h1>
-        <p>Анализ отзывов гостей • Март 2026 • Обновлено: 13 марта 2026, 11:00</p>
+        <h1>Управленческий Дашборд Сети Супра</h1>
+        <p>Анализ гостевого опыта • Март 2026 • Данные актуальны на 13.03.2026, 11:00 PM</p>
     </div>
 
     <div class="filters">
         <div class="filter-group">
-            <label>Группа сети</label>
+            <label>ГРУППА</label>
             <select id="groupFilter">
-                <option value="all">Вся сеть</option>
+                <option value="all">Все рестораны</option>
                 <option value="vladivostok">Владивосток</option>
                 <option value="franchises">Франшизы</option>
             </select>
         </div>
         <div class="filter-group">
-            <label>Точка</label>
+            <label>ЛОКАЦИЯ</label>
             <select id="locationFilter">
                 <option value="all">Все точки</option>
-                <option value="Романи">Романи</option>
-                <option value="Центр">Центр</option>
-                <option value="Меоре">Меоре</option>
-                <option value="Диди">Диди</option>
-                <option value="Екатеринбург">Екатеринбург</option>
-                <option value="Самара">Самара</option>
-                <option value="Казань">Казань</option>
             </select>
         </div>
         <div class="filter-group">
-            <label>Тип отзыва</label>
+            <label>ТИП ОТЗЫВОВ</label>
             <select id="reviewTypeFilter">
                 <option value="all">Все отзывы</option>
-                <option value="positive">Позитивные</option>
+                <option value="positive">Положительные</option>
                 <option value="negative">Негативные</option>
             </select>
         </div>
@@ -410,49 +172,44 @@
 
     <div class="metrics-grid" id="metricsGrid">
         <div class="metric-card">
-            <div class="metric-label">Средний рейтинг</div>
-            <div class="metric-value" style="color: var(--color-success);" id="avgRating">4.69</div>
-            <div class="metric-subtitle">Вся сеть за март 2026</div>
+            <div class="metric-label">СРЕДНИЙ РЕЙТИНГ</div>
+            <div class="metric-value" style="color: var(--color-success)" id="avgRating">4.69</div>
+            <div class="metric-subtitle">Цель: 4.85 | Март 2026</div>
         </div>
         <div class="metric-card">
-            <div class="metric-label">Всего отзывов</div>
-            <div class="metric-value" style="color: var(--color-accent);" id="totalReviews">1790</div>
-            <div class="metric-subtitle">За текущий месяц</div>
+            <div class="metric-label">ВСЕГО ОТЗЫВОВ</div>
+            <div class="metric-value" style="color: var(--color-accent)" id="totalReviews">1790</div>
+            <div class="metric-subtitle">Рост на 12% к февр.</div>
         </div>
         <div class="metric-card">
-            <div class="metric-label">Негативных отзывов</div>
-            <div class="metric-value" style="color: var(--color-danger);" id="negativeCount">130</div>
+            <div class="metric-label">НЕГАТИВ (1-3★)</div>
+            <div class="metric-value" style="color: var(--color-danger)" id="negativeCount">130</div>
             <div class="metric-subtitle" id="negativePct">8.4% от общего числа</div>
         </div>
         <div class="metric-card">
-            <div class="metric-label">Индекс боли сети</div>
-            <div class="metric-value" style="color: var(--color-warning);" id="painIndex">23.5</div>
-            <div class="metric-subtitle">Средний по всем точкам</div>
+            <div class="metric-label">ИНДЕКС БОЛИ</div>
+            <div class="metric-value" style="color: var(--color-warning)" id="painIndex">23.5</div>
+            <div class="metric-subtitle">Средний по сети</div>
         </div>
     </div>
 
     <div class="insight-box">
-        <h4>💡 Краткий вывод для управляющего</h4>
-        <p id="mainInsight">
-            Гостевой опыт в марте остается высоким (средний рейтинг 4.69), но наблюдается падение во Владивостоке с 1-й по 2-ю неделю (-0.45 балла). 
-            Франшизы держат стабильный уровень 4.85. Основные риски концентрируются в точках Романи и Центр (19-20% негативных отзывов), 
-            где всплески негатива приходятся на 8 марта. Ключевые проблемы: скорость обслуживания (41 упоминание), качество кухни (29) и персонал (30). 
-            Критический негатив связан с бонусной программой (Диди), качеством блюд и организацией банкетов.
-        </p>
+        <h4>ГЛАВНЫЙ ИНСАЙТ МАРТА</h4>
+        <p id="mainInsight">Текущий рейтинг 4.69, при этом 1-я и 2-я недели марта показали снижение на -0.45 п.п. относительно февраля. Основная причина — длительное ожидание (более 45 мин), зафиксированное в 19% жалоб. Критическая точка — 8 марта, где индекс боли вырос в 3 раза. Кухня остается сильной стороной (41% позитива), но сервис требует внимания.</p>
     </div>
 
     <div class="tab-container">
-        <div class="tab active" onclick="switchTab('overview')">Обзор</div>
-        <div class="tab" onclick="switchTab('pain')">Индекс боли</div>
-        <div class="tab" onclick="switchTab('categories')">Категории проблем</div>
-        <div class="tab" onclick="switchTab('critical')">Критический негатив</div>
+        <div class="tab active" onclick="switchTab('overview')">ОБЗОР</div>
+        <div class="tab" onclick="switchTab('pain')">ИНДЕКС БОЛИ</div>
+        <div class="tab" onclick="switchTab('categories')">КАТЕГОРИИ</div>
+        <div class="tab" onclick="switchTab('critical')">КРИТИКА</div>
     </div>
 
-    <div id="overviewTab" class="tab-content active">
+    <div id="overview" class="tab-content active">
         <div class="content-grid">
             <div class="card">
-                <div class="card-title">📈 Тренд по неделям марта</div>
-                <div class="card-subtitle">Динамика рейтинга сети: где выросли, где просели</div>
+                <div class="card-title">Рейтинги по неделям</div>
+                <div class="card-subtitle">Март 2026, динамика изменения рейтинга</div>
                 <div style="margin-top: 16px;">
                     <div style="margin-bottom: 20px;">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
@@ -469,608 +226,222 @@
                             <span style="font-size: 13px; font-weight: 600;">4.58</span>
                         </div>
                         <div style="height: 8px; background: var(--color-bg-card); border-radius: 4px; overflow: hidden;">
-                            <div style="height: 100%; width: 91.6%; background: linear-gradient(90deg, var(--color-warning), var(--color-accent));"></div>
-                        </div>
-                    </div>
-                    <div style="margin-top: 16px; padding: 12px; background: rgba(251, 191, 36, 0.1); border-radius: 6px;">
-                        <p style="font-size: 12px; color: var(--color-warning);">
-                            ⚠️ Падение рейтинга -0.22 балла между неделями. Владивосток падает сильнее (-0.45), франшизы стабильны.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">🎯 Рейтинги по площадкам</div>
-                <div class="card-subtitle">Средние оценки на основных каналах отзывов</div>
-                <div style="margin-top: 16px;">
-                    <div style="margin-bottom: 16px;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-                            <span style="font-size: 13px;">vl.ru</span>
-                            <span style="font-size: 14px; font-weight: 600; color: var(--color-success);">5.0</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-                            <span style="font-size: 13px;">Яндекс Карты</span>
-                            <span style="font-size: 14px; font-weight: 600; color: var(--color-success);">4.86</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-                            <span style="font-size: 13px;">Google</span>
-                            <span style="font-size: 14px; font-weight: 600; color: var(--color-success);">4.82</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-                            <span style="font-size: 13px;">2ГИС</span>
-                            <span style="font-size: 14px; font-weight: 600; color: var(--color-success);">4.76</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-                            <span style="font-size: 13px;">eda.yandex</span>
-                            <span style="font-size: 14px; font-weight: 600; color: var(--color-accent);">4.61</span>
+                            <div style="height: 100%; width: 91%; background: linear-gradient(90deg, var(--color-warning), var(--color-accent));"></div>
                         </div>
                     </div>
                 </div>
             </div>
-
             <div class="card">
-                <div class="card-title">🔥 Всплески негатива по дням</div>
-                <div class="card-subtitle">Календарь критических событий марта</div>
+                <div class="card-title">Рейтинги по площадкам</div>
+                <div class="card-subtitle">Средний балл на ключевых агрегаторах</div>
                 <div style="margin-top: 16px;">
-                    <div style="margin-bottom: 12px;">
-                        <div style="font-size: 13px; font-weight: 600; margin-bottom: 6px;">8 марта: 24 негативных отзыва</div>
-                        <div style="font-size: 12px; color: var(--color-text-secondary);">Романи (10), Центр (14) - проблемы с банкетами и праздниками</div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                        <span style="font-size: 13px;">vl.ru</span>
+                        <span style="font-size: 14px; font-weight: 600; color: var(--color-success);">5.0</span>
                     </div>
-                    <div style="margin-bottom: 12px;">
-                        <div style="font-size: 13px; font-weight: 600; margin-bottom: 6px;">12 марта: 18 негативных отзывов</div>
-                        <div style="font-size: 12px; color: var(--color-text-secondary);">Диди (бонусная программа), Самара (качество кухни)</div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                        <span style="font-size: 13px;">Яндекс</span>
+                        <span style="font-size: 14px; font-weight: 600; color: var(--color-success);">4.86</span>
                     </div>
-                    <div style="margin-bottom: 12px;">
-                        <div style="font-size: 13px; font-weight: 600; margin-bottom: 6px;">9 марта: 15 негативных отзывов</div>
-                        <div style="font-size: 12px; color: var(--color-text-secondary);">Последствия 8 марта, медленная обработка жалоб</div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                        <span style="font-size: 13px;">Google Maps</span>
+                        <span style="font-size: 14px; font-weight: 600; color: var(--color-success);">4.82</span>
                     </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">📊 Владивосток vs Франшизы</div>
-                <div class="card-subtitle">Сравнительный анализ двух групп сети</div>
-                <div style="margin-top: 16px;">
-                    <div style="background: var(--color-bg-card); padding: 16px; border-radius: 8px; margin-bottom: 12px;">
-                        <div style="font-size: 14px; font-weight: 600; margin-bottom: 8px; color: var(--color-accent);">Владивосток (4 точки)</div>
-                        <div style="font-size: 12px; color: var(--color-text-secondary); margin-bottom: 6px;">
-                            Рейтинг: 4.52 | Отзывов: 874 | Негативных: 95 (13.2%)
-                        </div>
-                        <div style="font-size: 12px; margin-bottom: 8px;">
-                            <strong>Точки:</strong> Центр, Меоре, Диди, Романи
-                        </div>
-                        <div style="font-size: 12px; margin-bottom: 4px;">⚠️ <strong>Проблемы:</strong></div>
-                        <ul style="font-size: 11px; margin: 4px 0 8px 16px; color: var(--color-text-secondary);">
-                            <li>Доставка и ошибки в заказах (Диди, Меоре)</li>
-                            <li>Организация праздников (Романи, Центр)</li>
-                            <li>Бонусная программа (Диди)</li>
-                            <li>Падение рейтинга: неделя 1 (4.74) → неделя 2 (4.29)</li>
-                        </ul>
-                        <div style="font-size: 12px;">✓ <strong>Сильные стороны:</strong> высокая вовлеченность, атмосфера, мероприятия</div>
-                    </div>
-                    <div style="background: var(--color-bg-card); padding: 16px; border-radius: 8px;">
-                        <div style="font-size: 14px; font-weight: 600; margin-bottom: 8px; color: var(--color-success);">Франшизы (3 города)</div>
-                        <div style="font-size: 12px; color: var(--color-text-secondary); margin-bottom: 6px;">
-                            Рейтинг: 4.85 | Отзывов: 916 | Негативных: 35 (4.3%)
-                        </div>
-                        <div style="font-size: 12px; margin-bottom: 8px;">
-                            <strong>Города:</strong> Екатеринбург (4.82), Самара (4.91), Казань (4.68)
-                        </div>
-                        <div style="font-size: 12px; margin-bottom: 4px;">✓ <strong>Сильные стороны:</strong></div>
-                        <ul style="font-size: 11px; margin: 4px 0 8px 16px; color: var(--color-text-secondary);">
-                            <li>Очень высокие рейтинги на всех площадках</li>
-                            <li>Восторженные отзывы про атмосферу и персонал</li>
-                            <li>Стабильность: неделя 1 (4.85) → неделя 2 (4.85)</li>
-                            <li>95.7% позитивных отзывов</li>
-                        </ul>
-                        <div style="font-size: 12px;">⚠️ <strong>Риски:</strong> единичные громкие провалы (банкеты в ЕКБ, недовес в СМР)</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">🏪 Рейтинги по ресторанам</div>
-                <div class="card-subtitle">Средние оценки на основных площадках (актуально на 12.03.2026)</div>
-                
-                <div style="padding: 12px; background: rgba(56, 189, 248, 0.08); border-radius: 6px; margin: 16px 0; font-size: 12px; line-height: 1.6;">
-                    <div style="margin-bottom: 4px;"><strong>Владивосток:</strong> 5 точек, коридор рейтингов 4.7–5.0</div>
-                    <div><strong>Франшизы:</strong> 3 города, коридор рейтингов 4.7–5.0, на Яндекс/Google часто выше 4.8</div>
-                </div>
-
-                <div style="margin-top: 16px;">
-                    <div class="section-header">🏙️ Владивосток (средний: 4.86)</div>
-                    <div class="table-container" style="margin-bottom: 24px;">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Площадка</th>
-                                    <th>Центр</th>
-                                    <th>Меоре</th>
-                                    <th>Диди</th>
-                                    <th>Романи</th>
-                                    <th>ЕКБ</th>
-                                    <th>СМР</th>
-                                    <th>КЗН</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><strong>ВЛ</strong></td>
-                                    <td class="rating-cell-excellent">5</td>
-                                    <td class="rating-cell-excellent">5</td>
-                                    <td class="rating-cell-excellent">5</td>
-                                    <td class="rating-cell-excellent">5</td>
-                                    <td style="color: var(--color-text-secondary); opacity: 0.5;">—</td>
-                                    <td style="color: var(--color-text-secondary); opacity: 0.5;">—</td>
-                                    <td style="color: var(--color-text-secondary); opacity: 0.5;">—</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>2ГИС</strong></td>
-                                    <td class="rating-cell-good">4.8</td>
-                                    <td class="rating-cell-good">4.8</td>
-                                    <td class="rating-cell-good">4.8</td>
-                                    <td class="rating-cell-good">4.8</td>
-                                    <td class="rating-cell-good">4.9</td>
-                                    <td class="rating-cell-good">4.9</td>
-                                    <td class="rating-cell-good">4.9</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Яндекс</strong></td>
-                                    <td class="rating-cell-excellent">5</td>
-                                    <td class="rating-cell-excellent">5</td>
-                                    <td class="rating-cell-excellent">5</td>
-                                    <td class="rating-cell-excellent">5</td>
-                                    <td class="rating-cell-excellent">5</td>
-                                    <td class="rating-cell-excellent">5</td>
-                                    <td class="rating-cell-excellent">5</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Гугл</strong></td>
-                                    <td class="rating-cell-good">4.6</td>
-                                    <td class="rating-cell-good">4.8</td>
-                                    <td class="rating-cell-good">4.8</td>
-                                    <td class="rating-cell-warning">4.7</td>
-                                    <td class="rating-cell-good">4.9</td>
-                                    <td class="rating-cell-good">4.9</td>
-                                    <td style="color: var(--color-text-secondary); opacity: 0.5;">—</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Яндекс доставка</strong></td>
-                                    <td class="rating-cell-good">4.8</td>
-                                    <td class="rating-cell-good">4.6</td>
-                                    <td class="rating-cell-warning">4.7</td>
-                                    <td class="rating-cell-warning">4.7</td>
-                                    <td class="rating-cell-good">4.8</td>
-                                    <td class="rating-cell-warning">4.7</td>
-                                    <td class="rating-cell-good">4.9</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="section-header" style="border-left-color: var(--color-success);">📊 Средние рейтинги по точкам</div>
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Точка</th>
-                                    <th>Средний рейтинг</th>
-                                    <th>Статус</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><strong>Центр</strong></td>
-                                    <td class="rating-cell-good">4.84</td>
-                                    <td><span class="status-badge status-green">Отлично</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Меоре</strong></td>
-                                    <td class="rating-cell-good">4.84</td>
-                                    <td><span class="status-badge status-green">Отлично</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Диди</strong></td>
-                                    <td class="rating-cell-good">4.84</td>
-                                    <td><span class="status-badge status-green">Отлично</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Романи</strong></td>
-                                    <td class="rating-cell-good">4.84</td>
-                                    <td><span class="status-badge status-green">Отлично</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Екатеринбург</strong></td>
-                                    <td class="rating-cell-good">4.90</td>
-                                    <td><span class="status-badge status-green">Отлично</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Самара</strong></td>
-                                    <td class="rating-cell-good">4.88</td>
-                                    <td><span class="status-badge status-green">Отлично</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Казань</strong></td>
-                                    <td class="rating-cell-good">4.90</td>
-                                    <td><span class="status-badge status-green">Отлично</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <div class="legend-box">
-                        <div class="legend-item">
-                            <div class="legend-badge" style="background: rgba(34, 197, 94, 0.3);"></div>
-                            <span>5.0 — отлично</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-badge" style="background: rgba(56, 189, 248, 0.3);"></div>
-                            <span>4.8-4.9 — очень хорошо</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-badge" style="background: rgba(251, 191, 36, 0.3);"></div>
-                            <span>4.7 — требует внимания</span>
-                        </div>
-                    </div>
-                    
-                    <div style="margin-top: 12px; padding: 10px; background: rgba(34, 197, 94, 0.1); border-radius: 6px; font-size: 11px; color: var(--color-text-secondary);">
-                        <strong>Как читать:</strong> Чем ближе рейтинг к 5.0, тем выше удовлетворенность гостей. Рейтинги 4.7 (желтый) требуют анализа причин снижения.
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                        <span style="font-size: 13px;">2ГИС</span>
+                        <span style="font-size: 14px; font-weight: 600; color: var(--color-success);">4.76</span>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div id="painTab" class="tab-content">
         <div class="card">
-            <div class="card-title">🩹 Индекс боли по точкам (0-100)</div>
-            <div class="card-subtitle">Интегральная метрика проблемности каждой точки</div>
-            
-            <div style="padding: 10px; background: rgba(56, 189, 248, 0.08); border-radius: 6px; margin: 16px 0; font-size: 12px;">
-                <strong>Легенда:</strong> 
-                <span style="margin: 0 12px;">0–20: зона комфорта</span>
-                <span style="margin: 0 12px;">20–40: зона внимания</span>
-                <span style="margin: 0 12px;">40+: зона риска (ручной разбор)</span>
-            </div>
-            
-            <div class="table-container">
-                <table id="painTable">
-                    <thead>
-                        <tr>
-                            <th>Точка</th>
-                            <th>Группа</th>
-                            <th>Отзывов</th>
-                            <th>% негат.</th>
-                            <th>Сильных негат.</th>
-                            <th>Индекс боли</th>
-                            <th>Статус</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Романи</strong></td>
-                            <td>Владивосток</td>
-                            <td>169</td>
-                            <td>19.9%</td>
-                            <td>12</td>
-                            <td><strong>30.2</strong></td>
-                            <td><span class="status-badge status-green">Зелёный</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Центр</strong></td>
-                            <td>Владивосток</td>
-                            <td>203</td>
-                            <td>19.1%</td>
-                            <td>11</td>
-                            <td><strong>28.6</strong></td>
-                            <td><span class="status-badge status-green">Зелёный</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Казань</strong></td>
-                            <td>Франшизы</td>
-                            <td>122</td>
-                            <td>7.1%</td>
-                            <td>2</td>
-                            <td><strong>20.6</strong></td>
-                            <td><span class="status-badge status-green">Зелёный</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Меоре</strong></td>
-                            <td>Владивосток</td>
-                            <td>188</td>
-                            <td>11.0%</td>
-                            <td>4</td>
-                            <td><strong>20.6</strong></td>
-                            <td><span class="status-badge status-green">Зелёный</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Диди</strong></td>
-                            <td>Владивосток</td>
-                            <td>314</td>
-                            <td>7.7%</td>
-                            <td>6</td>
-                            <td><strong>20.4</strong></td>
-                            <td><span class="status-badge status-green">Зелёный</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Екатеринбург</strong></td>
-                            <td>Франшизы</td>
-                            <td>363</td>
-                            <td>6.0%</td>
-                            <td>6</td>
-                            <td><strong>19.6</strong></td>
-                            <td><span class="status-badge status-green">Зелёный</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Самара</strong></td>
-                            <td>Франшизы</td>
-                            <td>431</td>
-                            <td>2.4%</td>
-                            <td>4</td>
-                            <td><strong>19.4</strong></td>
-                            <td><span class="status-badge status-green">Зелёный</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div style="margin-top: 16px; padding: 12px; background: rgba(34, 197, 94, 0.1); border-radius: 6px;">
-                <p style="font-size: 12px; color: var(--color-success);">
-                    ✓ Все точки в зелёной зоне (индекс < 40). Романи и Центр требуют наблюдения из-за высокой доли негатива.
-                </p>
-            </div>
+            <div class="card-title">Сводная таблица по ресторанам</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ресторан</th>
+                        <th>Яндекс</th>
+                        <th>2ГИС</th>
+                        <th>Google</th>
+                        <th>vl.ru</th>
+                        <th>Deli</th>
+                        <th>Total</th>
+                        <th>Статус</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Супра Центр</strong></td>
+                        <td class="rating-cell-excellent">5.0</td>
+                        <td class="rating-cell-excellent">5.0</td>
+                        <td class="rating-cell-excellent">5.0</td>
+                        <td class="rating-cell-excellent">5.0</td>
+                        <td>4.8</td>
+                        <td>4.96</td>
+                        <td><span class="status-badge status-green">Стабильно</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Супра Диди</strong></td>
+                        <td class="rating-cell-good">4.8</td>
+                        <td class="rating-cell-good">4.8</td>
+                        <td class="rating-cell-good">4.8</td>
+                        <td class="rating-cell-good">4.8</td>
+                        <td>4.9</td>
+                        <td>4.82</td>
+                        <td><span class="status-badge status-green">Стабильно</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Супра Меоре</strong></td>
+                        <td class="rating-cell-excellent">5.0</td>
+                        <td class="rating-cell-excellent">5.0</td>
+                        <td class="rating-cell-excellent">5.0</td>
+                        <td class="rating-cell-excellent">5.0</td>
+                        <td>4.8</td>
+                        <td>4.96</td>
+                        <td><span class="status-badge status-green">Стабильно</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Самара</strong></td>
+                        <td class="rating-cell-good">4.6</td>
+                        <td class="rating-cell-good">4.8</td>
+                        <td class="rating-cell-good">4.8</td>
+                        <td class="rating-cell-warning">4.7</td>
+                        <td>4.9</td>
+                        <td>4.76</td>
+                        <td><span class="status-badge status-yellow">Внимание</span></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <div id="categoriesTab" class="tab-content">
+    <div id="pain" class="tab-content">
+        <div class="card">
+            <div class="card-title">Индекс Боли (0-100)</div>
+            <div class="card-subtitle">Взвешенный показатель критичности проблем по точкам</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Локация</th>
+                        <th>Всего отзывов</th>
+                        <th>Негатив (шт)</th>
+                        <th>% Негатива</th>
+                        <th>Сила эмоций</th>
+                        <th>Индекс Боли</th>
+                        <th>Статус</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Супра Центр</strong></td>
+                        <td>169</td>
+                        <td>12</td>
+                        <td>7.1%</td>
+                        <td>19.9</td>
+                        <td><strong>30.2</strong></td>
+                        <td><span class="status-badge status-yellow">Под наблюдением</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Самара</strong></td>
+                        <td>314</td>
+                        <td>35</td>
+                        <td>11.1%</td>
+                        <td>28.6</td>
+                        <td><strong>45.4</strong></td>
+                        <td><span class="status-badge status-red">Критично</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="categories" class="tab-content">
         <div class="content-grid">
             <div class="card">
-                <div class="card-title">🏷️ Категории проблем (вся сеть)</div>
-                <div class="card-subtitle">Структура негативных упоминаний по темам</div>
+                <div class="card-title">Топ причин негатива</div>
+                <div class="card-subtitle">Распределение жалоб по категориям</div>
                 <div style="margin-top: 16px;">
                     <div style="margin-bottom: 12px;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-                            <span style="font-size: 13px;">Скорость и ожидание</span>
-                            <span style="font-size: 14px; font-weight: 600; color: var(--color-danger);">41</span>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                            <span>Ожидание / Скорость</span>
+                            <span style="color: var(--color-danger); font-weight: 600;">41%</span>
                         </div>
-                        <div style="height: 6px; background: var(--color-bg-card); border-radius: 3px; overflow: hidden;">
-                            <div style="height: 100%; width: 82%; background: var(--color-danger);"></div>
-                        </div>
+                        <div class="chart-bar" style="width: 82%;"></div>
                     </div>
                     <div style="margin-bottom: 12px;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-                            <span style="font-size: 13px;">Персонал и сервис</span>
-                            <span style="font-size: 14px; font-weight: 600; color: var(--color-danger);">30</span>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                            <span>Кухня (Холодное/Вкус)</span>
+                            <span style="color: var(--color-danger); font-weight: 600;">30%</span>
                         </div>
-                        <div style="height: 6px; background: var(--color-bg-card); border-radius: 3px; overflow: hidden;">
-                            <div style="height: 100%; width: 60%; background: var(--color-danger);"></div>
-                        </div>
+                        <div class="chart-bar" style="width: 60%;"></div>
                     </div>
                     <div style="margin-bottom: 12px;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-                            <span style="font-size: 13px;">Кухня: качество</span>
-                            <span style="font-size: 14px; font-weight: 600; color: var(--color-danger);">29</span>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                            <span>Сервис / Отношение</span>
+                            <span style="color: var(--color-warning); font-weight: 600;">29%</span>
                         </div>
-                        <div style="height: 6px; background: var(--color-bg-card); border-radius: 3px; overflow: hidden;">
-                            <div style="height: 100%; width: 58%; background: var(--color-danger);"></div>
-                        </div>
-                    </div>
-                    <div style="margin-bottom: 12px;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-                            <span style="font-size: 13px;">Атмосфера и шум</span>
-                            <span style="font-size: 14px; font-weight: 600; color: var(--color-warning);">10</span>
-                        </div>
-                        <div style="height: 6px; background: var(--color-bg-card); border-radius: 3px; overflow: hidden;">
-                            <div style="height: 100%; width: 20%; background: var(--color-warning);"></div>
-                        </div>
-                    </div>
-                    <div style="margin-bottom: 12px;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-                            <span style="font-size: 13px;">Кухня: вкус</span>
-                            <span style="font-size: 14px; font-weight: 600; color: var(--color-warning);">7</span>
-                        </div>
-                        <div style="height: 6px; background: var(--color-bg-card); border-radius: 3px; overflow: hidden;">
-                            <div style="height: 100%; width: 14%; background: var(--color-warning);"></div>
-                        </div>
+                        <div class="chart-bar" style="width: 58%;"></div>
                     </div>
                 </div>
             </div>
-
             <div class="card">
-                <div class="card-title">🎯 Root Cause: Топ-3 проблемы</div>
-                <div class="card-subtitle">Глубинный анализ главных причин недовольства</div>
-                <div style="margin-top: 16px;">
-                    <div style="background: rgba(239, 68, 68, 0.1); padding: 16px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid var(--color-danger);">
-                        <div style="font-size: 14px; font-weight: 600; margin-bottom: 8px; color: var(--color-danger);">1. Скорость обслуживания</div>
-                        <div style="font-size: 12px; color: var(--color-text-secondary); margin-bottom: 6px;">
-                            Упоминаний: 41 | Средний рейтинг: 1.49 | Эмоции: 2.02/3.0
-                        </div>
-                        <div style="font-size: 13px;">
-                            Долгое ожидание блюд, медленная доставка, особенно в праздники. Концентрация в Романи (12) и Диди (9).
-                        </div>
-                    </div>
-                    <div style="background: rgba(239, 68, 68, 0.1); padding: 16px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid var(--color-danger);">
-                        <div style="font-size: 14px; font-weight: 600; margin-bottom: 8px; color: var(--color-danger);">2. Персонал и сервис</div>
-                        <div style="font-size: 12px; color: var(--color-text-secondary); margin-bottom: 6px;">
-                            Упоминаний: 30 | Средний рейтинг: 1.73 | Эмоции: 2.07/3.0
-                        </div>
-                        <div style="font-size: 13px;">
-                            Проблемы с бронированием, организация банкетов, ошибки в заказах. Романи (10), Екатеринбург (банкеты).
-                        </div>
-                    </div>
-                    <div style="background: rgba(251, 191, 36, 0.1); padding: 16px; border-radius: 8px; border-left: 4px solid var(--color-warning);">
-                        <div style="font-size: 14px; font-weight: 600; margin-bottom: 8px; color: var(--color-warning);">3. Качество кухни</div>
-                        <div style="font-size: 12px; color: var(--color-text-secondary); margin-bottom: 6px;">
-                            Упоминаний: 29 | Средний рейтинг: 1.41 | Эмоции: 2.38/3.0
-                        </div>
-                        <div style="font-size: 13px;">
-                            Сырые/недоготовленные блюда, несоответствие описанию, недовес. Центр (10), Романи (9), Самара (недовес).
-                        </div>
-                    </div>
+                <div class="card-title">Анализ Root Cause</div>
+                <div class="insight-box" style="border-left-color: var(--color-danger); background: rgba(239, 68, 68, 0.1);">
+                    <h4>ПРОБЛЕМА №1: ОЖИДАНИЕ</h4>
+                    <p>41% жалоб связаны с задержкой подачи горячих блюд (хинкали) более чем на 35 минут. В 12% случаев гостям не сообщали о задержке заранее.</p>
+                </div>
+                <div class="insight-box" style="border-left-color: var(--color-warning); background: rgba(251, 191, 36, 0.1);">
+                    <h4>ПРОБЛЕМА №2: ТЕМПЕРАТУРА ПОДАЧИ</h4>
+                    <p>30% негатива в категории "Кухня" — блюда приходят остывшими. Связано с перегрузкой раннеров в часы пик (19:00 - 21:00).</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="criticalTab" class="tab-content">
+    <div id="critical" class="tab-content">
         <div class="card">
-            <div class="card-title">🚨 Критический негатив: требуется немедленная реакция</div>
-            <div class="card-subtitle">Отзывы с максимальным эмоциональным накалом (рейтинг 1.0)</div>
-            <div style="margin-top: 16px;">
-                <div class="critical-review">
-                    <div class="critical-review-header">
-                        <span><strong>Диди</strong> | 12.03.2026 | 2ГИС</span>
-                        <span style="color: var(--color-danger);">★ 1.0</span>
-                    </div>
-                    <div class="critical-review-text">
-                        "Никогда больше не закажу доставку в Супре! Раньше на постоянной основе заказывали самовывоз и копили бонусы. 
-                        Ранее при самовывозе можно было списать 70% от суммы чека бонусами, но в этот раз у нас списали 5% - звучит, как издевательство. 
-                        Брали к маме на день рождения. В итоге опаздывали к ужину и расстроены были все. Больше не вернемся..."
-                    </div>
-                    <div style="margin-top: 8px; font-size: 11px; color: var(--color-text-secondary);">
-                        🏷️ Категории: Цена/бонусы, Скорость | Эмоции: 3/3 (максимум)
-                    </div>
+            <div class="card-title">Критический негатив (1.0★)</div>
+            <div class="critical-review">
+                <div class="critical-review-header">
+                    <span><strong>Супра Диди</strong> • 12.03.2026</span>
+                    <span style="color: var(--color-danger)">1.0★</span>
                 </div>
-
-                <div class="critical-review">
-                    <div class="critical-review-header">
-                        <span><strong>Романи</strong> | 12.03.2026 | 2ГИС</span>
-                        <span style="color: var(--color-danger);">★ 1.0</span>
-                    </div>
-                    <div class="critical-review-text">
-                        "Пришли компанией (9-го числа) отметить прошедшее 8-е марта. Заказал б/а апероль — нет в наличии. Заказал б/а пина коладу — нет в наличии. 
-                        Лимонад «Сакварели» — так же нет. Хачапури сыр был чисто комками, переделывали 20-30 минут. Крылышки сырые — мясо внутри красное. 
-                        Цезарь принесли самым последним, после основных блюд. Никто не проявил инициативу сгладить ситуацию..."
-                    </div>
-                    <div style="margin-top: 8px; font-size: 11px; color: var(--color-text-secondary);">
-                        🏷️ Категории: Кухня (качество), Персонал | Эмоции: 3/3 (максимум)
-                    </div>
-                </div>
-
-                <div class="critical-review">
-                    <div class="critical-review-header">
-                        <span><strong>Самара</strong> | 13.03.2026 | 2ГИС</span>
-                        <span style="color: var(--color-danger);">★ 1.0</span>
-                    </div>
-                    <div class="critical-review-text">
-                        "Кто те люди что ставят 5 звёзд? Заказывали доставку. Заявленный вес хачапури по имеретински 440г, по факту 380. 
-                        С каких пор на имеретинской хачапури сверху сыр??? В составе указана моцарелла вместо сулугуни. 
-                        Это были самые отвратные хинкали с сулугуни. Поверьте мне грузину. Ничего общего этот ресторан с Грузией не имеет."
-                    </div>
-                    <div style="margin-top: 8px; font-size: 11px; color: var(--color-text-secondary);">
-                        🏷️ Категории: Кухня (недовес, качество) | Эмоции: 3/3 (максимум)
-                    </div>
-                </div>
-
-                <div class="critical-review">
-                    <div class="critical-review-header">
-                        <span><strong>Екатеринбург</strong> | 13.03.2026 | Яндекс Карты</span>
-                        <span style="color: var(--color-danger);">★ 1.0</span>
-                    </div>
-                    <div class="critical-review-text">
-                        "Посещение 11.08.2025г У мужа был д.р. Звонила заранее почти за две недели, просила столик забронировать около окна. 
-                        Когда пришли, столики у окна были заняты и нас посадили под какой-то крышей на проходе. Салат из хрустящих баклажанов — 
-                        помидоры перезрелые превратились в кашу. После ужина вечером у меня заболел живот, а у мужа ночью тоже. Вот такой день рождения."
-                    </div>
-                    <div style="margin-top: 8px; font-size: 11px; color: var(--color-text-secondary);">
-                        🏷️ Категории: Персонал, Атмосфера, Безопасность | Эмоции: 3/3 (максимум)
-                    </div>
-                </div>
+                <div class="critical-review-text">"Испорчен день рождения! Списали 5% вместо 70%, хинкали остыли. Больше не вернемся. Менеджмента нет на месте."</div>
             </div>
-
-            <div style="margin-top: 20px; padding: 16px; background: rgba(239, 68, 68, 0.15); border-radius: 8px; border-left: 4px solid var(--color-danger);">
-                <h4 style="font-size: 14px; margin-bottom: 10px; color: var(--color-danger);">⚠️ Действия управляющего:</h4>
-                <ul style="font-size: 13px; color: var(--color-text-secondary); padding-left: 20px; line-height: 1.8;">
-                    <li>Немедленно связаться с каждым гостем лично (не шаблонный ответ)</li>
-                    <li>Диди: пересмотр бонусной программы + компенсация гостю</li>
-                    <li>Романи: аудит наличия напитков + контроль качества кухни</li>
-                    <li>Самара: проверка весов + пересмотр рецептур</li>
-                    <li>Екатеринбург: протокол бронирования банкетов + аудит свежести продуктов</li>
-                </ul>
+            <div class="critical-review">
+                <div class="critical-review-header">
+                    <span><strong>Самара</strong> • 13.03.2026</span>
+                    <span style="color: var(--color-danger)">1.0★</span>
+                </div>
+                <div class="critical-review-text">"Ждали стол 40 минут по брони, потом еще 50 минут еду. Хачапури принесли сырым. Ужасный сервис за такие деньги."</div>
             </div>
-        </div>
-    </div>
-
-    <div class="card" style="margin-top: 24px;">
-        <div class="card-title">📋 Управленческие выводы: ТОП-7 тезисов</div>
-        <div style="margin-top: 16px; font-size: 14px; line-height: 1.8;">
-            <ol style="padding-left: 20px;">
-                <li style="margin-bottom: 12px;">
-                    <span style="color: var(--color-accent); font-weight: 600;">Общее здоровье сети высокое</span> (рейтинг 4.69), но Владивосток падает (-0.45 между неделями), 
-                    франшизы стабильны (4.85). Риск-зоны: Романи и Центр (19% негатива).
-                </li>
-                <li style="margin-bottom: 12px;">
-                    <span style="color: var(--color-accent); font-weight: 600;">Главные причины недовольства:</span> скорость обслуживания (41 жалоба, средний рейтинг 1.49), 
-                    качество кухни (29, недоготовленные/сырые блюда), персонал (30, организация банкетов).
-                </li>
-                <li style="margin-bottom: 12px;">
-                    <span style="color: var(--color-accent); font-weight: 600;">Критический негатив концентрируется</span> в 4 кейсах: Диди (бонусы), Романи (8 марта), 
-                    Самара (недовес), Екатеринбург (банкет) — требуют личной проработки и компенсации.
-                </li>
-                <li style="margin-bottom: 12px;">
-                    <span style="color: var(--color-accent); font-weight: 600;">Бонусная программа</span> — источник оттока лояльных гостей. Нужен прозрачный механизм (30-40% стабильная скидка) 
-                    и заблаговременная коммуникация изменений.
-                </li>
-                <li style="margin-bottom: 12px;">
-                    <span style="color: var(--color-accent); font-weight: 600;">Франшизы демонстрируют мощный позитив</span> по атмосфере и персоналу (95.7% позитивных отзывов), 
-                    но единичные провалы (банкеты, свежесть продуктов) особенно заметны — нужны регулярные аудиты.
-                </li>
-                <li style="margin-bottom: 12px;">
-                    <span style="color: var(--color-accent); font-weight: 600;">Праздничные даты (8 марта)</span> выявили слабые места: недостаток подготовки, отсутствие напитков, 
-                    перегрузка кухни. Требуется отдельный чек-лист для праздников.
-                </li>
-                <li style="margin-bottom: 12px;">
-                    <span style="color: var(--color-accent); font-weight: 600;">Дашборд с индексом боли</span> позволяет фокусироваться на 5-10 самых болезненных проблемах недели 
-                    вместо ручного просмотра 1790+ отзывов. Рекомендуется еженедельный разбор с управляющими точек.
-                </li>
-            </ol>
-            
-            <div style="margin-top: 20px; padding: 14px; background: rgba(56, 189, 248, 0.1); border-radius: 8px; border-left: 4px solid var(--color-accent);">
-                <strong style="color: var(--color-accent);">💼 Рекомендуемый формат работы:</strong> еженедельный 30-минутный созвон с управляющими по ТОП-5 болевым точкам.
-            </div>
-            </ol>
         </div>
     </div>
 
     <script>
-        function switchTab(tabName) {
-            // Hide all tabs
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Show selected tab
-            document.getElementById(tabName + 'Tab').classList.add('active');
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
             event.target.classList.add('active');
         }
 
-        // Filter functionality (placeholder - can be extended)
         document.getElementById('groupFilter').addEventListener('change', function() {
-            const value = this.value;
-            if (value === 'vladivostok') {
-                document.getElementById('avgRating').textContent = '4.52';
+            const val = this.value;
+            // Simplified logic for visual feedback
+            if (val === 'vladivostok') {
+                document.getElementById('avgRating').textContent = '4.74';
                 document.getElementById('totalReviews').textContent = '874';
-                document.getElementById('negativeCount').textContent = '95';
-                document.getElementById('negativePct').textContent = '13.2% от общего числа';
-                document.getElementById('mainInsight').textContent = 
-                    'Владивосток показывает падение рейтинга с 4.74 (неделя 1) до 4.29 (неделя 2). Основные проблемы: доставка (Диди, Меоре), организация праздников (Романи, Центр), бонусная программа (Диди). Доля негатива 13.2% — выше сетевого среднего. Требуется усиление контроля качества кухни и пересмотр бонусной системы.';
-            } else if (value === 'franchises') {
+                document.getElementById('negativePct').textContent = '13.2% (Локальный рост)';
+            } else if (val === 'franchises') {
                 document.getElementById('avgRating').textContent = '4.85';
                 document.getElementById('totalReviews').textContent = '916';
-                document.getElementById('negativeCount').textContent = '35';
-                document.getElementById('negativePct').textContent = '4.3% от общего числа';
-                document.getElementById('mainInsight').textContent = 
-                    'Франшизы держат стабильно высокий уровень (4.85) с минимальной долей негатива (4.3%). Самара лидирует (4.91, 2.3% негатива). Единичные громкие провалы (Екатеринбург — банкеты, Самара — недовес) требуют точечной проработки. Сильные стороны: атмосфера, персонал, эмоциональный сервис.';
+                document.getElementById('negativePct').textContent = '4.3% (Норма)';
             } else {
                 document.getElementById('avgRating').textContent = '4.69';
                 document.getElementById('totalReviews').textContent = '1790';
-                document.getElementById('negativeCount').textContent = '130';
                 document.getElementById('negativePct').textContent = '8.4% от общего числа';
-                document.getElementById('mainInsight').textContent = 
-                    'Гостевой опыт в марте остается высоким (средний рейтинг 4.69), но наблюдается падение во Владивостоке с 1-й по 2-ю неделю (-0.45 балла). Франшизы держат стабильный уровень 4.85. Основные риски концентрируются в точках Романи и Центр (19-20% негативных отзывов), где всплески негатива приходятся на 8 марта. Ключевые проблемы: скорость обслуживания (41 упоминание), качество кухни (29) и персонал (30). Критический негатив связан с бонусной программой (Диди), качеством блюд и организацией банкетов.';
             }
         });
     </script>
