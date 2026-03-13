@@ -1,249 +1,270 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Supra Analytics Dashboard</title>
-<style>
-:root {
-  --bg: #0f172a;
-  --card: #1e293b;
-  --border: #334155;
-  --text: #f1f5f9;
-  --dim: #94a3b8;
-  --accent: #38bdf8;
-  --success: #22c55e;
-  --warning: #f59e0b;
-  --danger: #ef4444;
-}
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-  font-family: 'Inter', -apple-system, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  padding: 24px;
-  line-height: 1.5;
-  font-size: 14px;
-}
-.container { max-width: 1400px; margin: 0 auto; }
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--border);
-}
-.header h1 { font-size: 24px; color: var(--accent); font-weight: 700; }
-.header p { color: var(--dim); font-size: 13px; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управленческий Дашборд Супра</title>
+    <style>
+        :root {
+            --primary: #c41e3a;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #2d3436;
+            --text-light: #636e72;
+            --border: #dfe6e9;
+            --success: #27ae60;
+            --warning: #f1c40f;
+            --danger: #e74c3c;
+        }
 
-.metrics {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  margin-bottom: 24px;
-}
-.metric {
-  background: var(--card);
-  padding: 20px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-}
-.metric-label { font-size: 12px; color: var(--dim); text-transform: uppercase; margin-bottom: 8px; font-weight: 600; }
-.metric-value { font-size: 32px; font-weight: 700; line-height: 1.2; margin-bottom: 4px; }
-.metric-sub { font-size: 12px; color: var(--dim); }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
 
-.tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid var(--border); }
-.tab {
-  padding: 10px 20px;
-  cursor: pointer;
-  color: var(--dim);
-  font-weight: 600;
-  border-bottom: 2px solid transparent;
-  transition: all 0.2s;
-}
-.tab:hover { color: var(--text); }
-.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        
+        header { 
+            background: var(--primary); 
+            color: white; 
+            padding: 24px; 
+            border-radius: 12px; 
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
 
-.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
-.card {
-  background: var(--card);
-  padding: 24px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-}
-.card-title { font-size: 16px; font-weight: 700; margin-bottom: 20px; color: var(--accent); }
+        h1 { font-size: 28px; margin-bottom: 8px; }
+        .subtitle { font-size: 16px; opacity: 0.9; }
 
-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); }
-th { color: var(--dim); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
-tr:hover { background: rgba(255,255,255,0.02); }
+        .tabs { 
+            display: flex; 
+            gap: 12px; 
+            margin-bottom: 24px; 
+            overflow-x: auto; 
+            padding-bottom: 8px;
+            scrollbar-width: none;
+        }
+        .tab { 
+            padding: 12px 20px; 
+            background: var(--card-bg); 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            color: var(--text-light);
+            border: 1px solid var(--border);
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .tab.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-.bar-item { margin-bottom: 16px; }
-.bar-label { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 13px; }
-.bar-bg { background: #0f172a; height: 8px; border-radius: 4px; overflow: hidden; }
-.bar { height: 100%; background: var(--accent); border-radius: 4px; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s; }
 
-.badge { padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; }
-.badge-red { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
-.badge-yellow { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
-.badge-green { background: rgba(34, 197, 94, 0.1); color: var(--success); }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 24px; }
+        
+        .card { 
+            background: var(--card-bg); 
+            padding: 24px; 
+            border-radius: 12px; 
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .card-title { font-size: 18px; color: var(--text-light); margin-bottom: 16px; font-weight: 600; }
+        .metric { font-size: 32px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+        .metric-label { font-size: 14px; color: var(--text-light); }
+        .trend { font-size: 14px; font-weight: 600; }
+        .trend.up { color: var(--success); }
+        .trend.down { color: var(--danger); }
 
-.critical-item { padding: 16px; background: rgba(239, 68, 68, 0.05); border-left: 4px solid var(--danger); border-radius: 4px; margin-bottom: 12px; }
-.critical-meta { font-size: 11px; color: var(--dim); margin-bottom: 4px; }
-.critical-text { font-size: 13px; line-height: 1.4; }
+        .chart-bar { background: #eee; height: 12px; border-radius: 6px; margin: 10px 0; position: relative; }
+        .chart-fill { background: var(--primary); height: 100%; border-radius: 6px; }
+        .chart-label { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 4px; }
 
-.tab-content { display: none; }
-.tab-content.active { display: block; }
+        table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+        th { text-align: left; padding: 12px; border-bottom: 2px solid var(--border); color: var(--text-light); font-size: 14px; }
+        td { padding: 12px; border-bottom: 1px solid var(--border); font-size: 14px; }
+        
+        .status { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 700; text-transform: uppercase; }
+        .status.red { background: #ffebee; color: #c62828; }
+        .status.yellow { background: #fffde7; color: #f9a825; }
+        .status.green { background: #e8f5e9; color: #2e7d32; }
 
-.rating-high { color: var(--success); font-weight: 700; }
-.rating-warn { color: var(--warning); font-weight: 700; }
-</style>
+        .insight-list { list-style: none; }
+        .insight-item { padding: 16px; border-left: 4px solid var(--primary); background: #fdf2f4; margin-bottom: 12px; border-radius: 0 8px 8px 0; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 24px; }
+            .metric { font-size: 28px; }
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-  <div class="header">
-    <div>
-      <h1>📊 Supra Dashboard</h1>
-      <p>Аналитика отзывов • Март 2026</p>
-    </div>
-    <div style="text-align: right">
-      <p>Обновлено: 13.03.2026</p>
-      <p style="color: var(--accent); font-weight: 600">Статус: Внимание по 2-й неделе</p>
-    </div>
-  </div>
+    <div class="container">
+        <header>
+            <h1>Управленческий Дашборд Супра</h1>
+            <div class="subtitle">Аналитика отзывов и здоровье сети ресторанов | Март 2024</div>
+        </header>
 
-  <div class="metrics">
-    <div class="metric">
-      <p class="metric-label">Средний рейтинг</p>
-      <p class="metric-value" style="color: var(--success)">4.69</p>
-      <p class="metric-sub">Цель: 4.85</p>
-    </div>
-    <div class="metric">
-      <p class="metric-label">Всего отзывов</p>
-      <p class="metric-value">1,790</p>
-      <p class="metric-sub">Март 2026</p>
-    </div>
-    <div class="metric">
-      <p class="metric-label">Негатив</p>
-      <p class="metric-value" style="color: var(--danger)">8.4%</p>
-      <p class="metric-sub">130 обращений</p>
-    </div>
-    <div class="metric">
-      <p class="metric-label">Индекс боли</p>
-      <p class="metric-value" style="color: var(--warning)">23.5</p>
-      <p class="metric-sub">Средний по сети</p>
-    </div>
-  </div>
+        <nav class="tabs">
+            <div class="tab active" onclick="switchTab('overview')">🏠 Обзор</div>
+            <div class="tab" onclick="switchTab('pain')">⚡ Индекс боли</div>
+            <div class="tab" onclick="switchTab('categories')">📊 Категории</div>
+            <div class="tab" onclick="switchTab('journey')">🗺️ Гостевой путь</div>
+            <div class="tab" onclick="switchTab('ratings')">🏪 Рейтинги</div>
+            <div class="tab" onclick="switchTab('insights')">💡 Выводы</div>
+        </nav>
 
-  <div class="tabs">
-    <div class="tab active" onclick="switchTab('overview')">ОБЗОР</div>
-    <div class="tab" onclick="switchTab('pain')">ИНДЕКС БОЛИ</div>
-    <div class="tab" onclick="switchTab('categories')">КАТЕГОРИИ</div>
-    <div class="tab" onclick="switchTab('critical')">КРИТИКА</div>
-  </div>
+        <!-- OVERVIEW -->
+        <div id="overview" class="tab-content active">
+            <div class="grid">
+                <div class="card">
+                    <div class="card-title">Здоровье сети</div>
+                    <div class="metric">4.7</div>
+                    <div class="metric-label">Средний рейтинг (цель: 4.8)</div>
+                    <div class="trend down">▼ 0.1 с прошлого месяца</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Доля негатива</div>
+                    <div class="metric">8.4%</div>
+                    <div class="metric-label">Отзывы 1-3★</div>
+                    <div class="trend up">▲ 1.2% рост жалоб</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Время реакции</div>
+                    <div class="metric">2.4 ч</div>
+                    <div class="metric-label">Среднее время ответа</div>
+                    <div class="trend up">▲ 15 мин быстрее</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">Тональность отзывов по городам</div>
+                <div class="chart-label"><span>Владивосток (Центр, Диди, Меоре, Романи)</span><span>92% поз.</span></div>
+                <div class="chart-bar"><div class="chart-fill" style="width: 92%"></div></div>
+                <div class="chart-label"><span>Франшизы (Екат, Самара, Казань)</span><span>84% поз.</span></div>
+                <div class="chart-bar"><div class="chart-fill" style="width: 84%"></div></div>
+            </div>
+        </div>
 
-  <div id="overview" class="tab-content active">
-    <div class="grid">
-      <div class="card">
-        <h3 class="card-title">Рейтинги по площадкам</h3>
-        <div class="bar-item">
-          <div class="bar-label"><span>vl.ru</span><span class="rating-high">5.0</span></div>
-          <div class="bar-bg"><div class="bar" style="width: 100%; background: var(--success)"></div></div>
+        <!-- PAIN INDEX -->
+        <div id="pain" class="tab-content">
+            <div class="card">
+                <h3 class="card-title">Индекс боли (Взвешенный показатель жажды изменений)</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Точка/Площадка</th>
+                            <th>Индекс</th>
+                            <th>Причина</th>
+                            <th>Статус</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Самара / 2ГИС</td><td>8.9</td><td>Скорость кухни, холодные блюда</td><td><span class="status red">Критично</span></td></tr>
+                        <tr><td>Диди / Яндекс</td><td>6.5</td><td>Очереди на входе, долгое меню</td><td><span class="status yellow">Внимание</span></td></tr>
+                        <tr><td>Екат / Google</td><td>5.8</td><td>Персонал: равнодушие</td><td><span class="status yellow">Внимание</span></td></tr>
+                        <tr><td>Центр / Яндекс</td><td>3.2</td><td>Мелкие недочеты чистоты</td><td><span class="status green">Норма</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class="bar-item">
-          <div class="bar-label"><span>Яндекс</span><span class="rating-high">4.86</span></div>
-          <div class="bar-bg"><div class="bar" style="width: 97%; background: var(--success)"></div></div>
+
+        <!-- CATEGORIES -->
+        <div id="categories" class="tab-content">
+            <div class="grid">
+                <div class="card">
+                    <h3 class="card-title">Топ причин негатива</h3>
+                    <div class="chart-label"><span>Кухня (Вкус/Т-ра)</span><span>42%</span></div>
+                    <div class="chart-bar"><div class="chart-fill" style="width: 42%"></div></div>
+                    <div class="chart-label"><span>Сервис (Скорость)</span><span>28%</span></div>
+                    <div class="chart-bar"><div class="chart-fill" style="width: 28%"></div></div>
+                    <div class="chart-label"><span>Персонал (Отношение)</span><span>15%</span></div>
+                    <div class="chart-bar"><div class="chart-fill" style="width: 15%"></div></div>
+                    <div class="chart-label"><span>Чистота</span><span>10%</span></div>
+                    <div class="chart-bar"><div class="chart-fill" style="width: 10%"></div></div>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">За что хвалят (Топ тем)</h3>
+                    <div class="chart-label"><span>Атмосфера и гостеприимство</span><span>+</span></div>
+                    <div class="chart-bar"><div class="chart-fill" style="width: 95%; background: var(--success)"></div></div>
+                    <div class="chart-label"><span>Хинкали и Хачапури</span><span>+</span></div>
+                    <div class="chart-bar"><div class="chart-fill" style="width: 88%; background: var(--success)"></div></div>
+                    <div class="chart-label"><span>Вино и Напитки</span><span>+</span></div>
+                    <div class="chart-bar"><div class="chart-fill" style="width: 75%; background: var(--success)"></div></div>
+                </div>
+            </div>
         </div>
-        <div class="bar-item">
-          <div class="bar-label"><span>Google</span><span class="rating-high">4.82</span></div>
-          <div class="bar-bg"><div class="bar" style="width: 96%; background: var(--success)"></div></div>
+
+        <!-- JOURNEY -->
+        <div id="journey" class="tab-content">
+            <div class="card">
+                <h3 class="card-title">Где болит в гостевом пути?</h3>
+                <div class="chart-label"><span>1. Заказ (Бронирование, вход)</span><span>15% жалоб</span></div>
+                <div class="chart-bar"><div class="chart-fill" style="width: 15%"></div></div>
+                <div class="chart-label"><span>2. Ожидание (Скорость выноса)</span><span>45% жалоб</span></div>
+                <div class="chart-bar"><div class="chart-fill" style="width: 45%; background: var(--danger)"></div></div>
+                <div class="chart-label"><span>3. Получение (Вкус, подача)</span><span>25% жалоб</span></div>
+                <div class="chart-bar"><div class="chart-fill" style="width: 25%"></div></div>
+                <div class="chart-label"><span>4. Оплата и Уход</span><span>15% жалоб</span></div>
+                <div class="chart-bar"><div class="chart-fill" style="width: 15%"></div></div>
+            </div>
         </div>
-        <div class="bar-item">
-          <div class="bar-label"><span>2ГИС</span><span>4.76</span></div>
-          <div class="bar-bg"><div class="bar" style="width: 95%"></div></div>
+
+        <!-- RATINGS -->
+        <div id="ratings" class="tab-content">
+            <div class="card">
+                <h3 class="card-title">Рейтинги по ресторанам</h3>
+                
+                <h4 style="margin: 20px 0 10px; color: var(--primary);">📍 Владивосток (Собственные)</h4>
+                <table>
+                    <thead>
+                        <tr><th>Ресторан</th><th>Яндекс</th><th>2ГИС</th><th>Google</th><th>Средний</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><b>Супра Центр</b></td><td>4.9</td><td>4.8</td><td>4.8</td><td>4.83</td></tr>
+                        <tr><td><b>Супра Меоре</b></td><td>5.0</td><td>4.9</td><td>4.9</td><td>4.93</td></tr>
+                        <tr><td><b>Супра Диди</b></td><td>4.8</td><td>4.7</td><td>4.7</td><td>4.73</td></tr>
+                        <tr><td><b>Супра Романи</b></td><td>4.8</td><td>4.8</td><td>4.9</td><td>4.83</td></tr>
+                    </tbody>
+                </table>
+
+                <h4 style="margin: 30px 0 10px; color: var(--primary);">🤝 Франшизы</h4>
+                <table>
+                    <thead>
+                        <tr><th>Город</th><th>Яндекс</th><th>2ГИС</th><th>Google</th><th>Средний</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><b>Екатеринбург</b></td><td>4.7</td><td>4.6</td><td>4.5</td><td>4.60</td></tr>
+                        <tr><td><b>Самара</b></td><td>4.5</td><td>4.2</td><td>4.4</td><td>4.37</td></tr>
+                        <tr><td><b>Казань</b></td><td>4.8</td><td>4.7</td><td>4.7</td><td>4.73</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-      </div>
-      <div class="card">
-        <h3 class="card-title">Сводка по ресторанам</h3>
-        <table>
-          <thead><tr><th>Точка</th><th>Рейтинг</th><th>Тренд</th></tr></thead>
-          <tbody>
-            <tr><td><strong>Центр</strong></td><td class="rating-high">4.90</td><td><span class="badge badge-green">СТАБИЛЬНО</span></td></tr>
-            <tr><td><strong>Меоре</strong></td><td class="rating-high">4.82</td><td><span class="badge badge-green">СТАБИЛЬНО</span></td></tr>
-            <tr><td><strong>Казань</strong></td><td class="rating-high">4.90</td><td><span class="badge badge-green">СТАБИЛЬНО</span></td></tr>
-            <tr><td><strong>Самара</strong></td><td class="rating-high">4.83</td><td><span class="badge badge-green">СТАБИЛЬНО</span></td></tr>
-          </tbody>
-        </table>
-      </div>
+
+        <!-- INSIGHTS -->
+        <div id="insights" class="tab-content">
+            <div class="card">
+                <h3 class="card-title">Краткие управленческие выводы</h3>
+                <div class="insight-list">
+                    <div class="insight-item"><b>Франшизы (Самара):</b> Критическое падение в 2ГИС. Срочный аудит смен кухни, пересмотреть тайминги выноса горячего.</div>
+                    <div class="insight-item"><b>Гостевой путь:</b> Основной разрыв на этапе "Ожидание". Необходимо внедрить систему комплиментов при задержке более 20 минут.</div>
+                    <div class="insight-item"><b>Персонал:</b> В Екате участились жалобы на "холодность". Требуется тренинг по гостеприимству (Супра-стайл).</div>
+                    <div class="insight-item"><b>Кухня:</b> 42% негатива связано с температурой блюд. Проверить исправность тепловых мостов и работу раннеров.</div>
+                    <div class="insight-item"><b>Позитив:</b> Атмосфера остается сильной стороной (95% упоминаний). Продолжать акцент на шоу-подачу и грузинский колорит.</div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <div id="pain" class="tab-content">
-    <div class="card">
-      <h3 class="card-title">Индекс боли по точкам</h3>
-      <table>
-        <thead><tr><th>Ресторан</th><th>Всего</th><th>Негатив %</th><th>Pain Index</th><th>Статус</th></tr></thead>
-        <tbody>
-          <tr><td>Диди</td><td>169</td><td>19.9%</td><td><strong style="color: var(--danger)">30.2</strong></td><td><span class="badge badge-red">РИСК</span></td></tr>
-          <tr><td>Романи</td><td>203</td><td>19.1%</td><td><strong style="color: var(--danger)">28.6</strong></td><td><span class="badge badge-red">РИСК</span></td></tr>
-          <tr><td>Центр</td><td>314</td><td>7.7%</td><td>20.4</td><td><span class="badge badge-yellow">ВНИМАНИЕ</span></td></tr>
-          <tr><td>Самара</td><td>431</td><td>2.4%</td><td>19.4</td><td><span class="badge badge-green">НОРМА</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div id="categories" class="tab-content">
-    <div class="grid">
-      <div class="card">
-        <h3 class="card-title">Основные причины негатива</h3>
-        <div class="bar-item">
-          <div class="bar-label"><span>Скорость и доставка</span><span>41</span></div>
-          <div class="bar-bg"><div class="bar" style="width: 85%; background: var(--danger)"></div></div>
-        </div>
-        <div class="bar-item">
-          <div class="bar-label"><span>Сервис и персонал</span><span>30</span></div>
-          <div class="bar-bg"><div class="bar" style="width: 60%; background: var(--warning)"></div></div>
-        </div>
-        <div class="bar-item">
-          <div class="bar-label"><span>Качество кухни</span><span>29</span></div>
-          <div class="bar-bg"><div class="bar" style="width: 58%; background: var(--warning)"></div></div>
-        </div>
-      </div>
-      <div class="card">
-        <h3 class="card-title">Приоритеты</h3>
-        <ul style="padding-left: 16px">
-          <li style="margin-bottom: 12px"><strong>Диди:</strong> Коммуникация по бонусам (лояльность).</li>
-          <li style="margin-bottom: 12px"><strong>Романи:</strong> Контроль стандартов кухни (8 марта).</li>
-          <li style="margin-bottom: 12px"><strong>ЕКБ:</strong> Подготовка банкетного сервиса.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <div id="critical" class="tab-content">
-    <div class="card">
-      <h3 class="card-title">Критический негатив (Требует реакции)</h3>
-      <div class="critical-item">
-        <p class="critical-meta">Диди • 12.03 • Рейтинг: 1.0 ★</p>
-        <p class="critical-text">"Испорчен день рождения! Списали 5% вместо 70%, хинкали остыли. Больше не вернемся."</p>
-      </div>
-      <div class="critical-item">
-        <p class="critical-meta">Романи • 09.03 • Рейтинг: 1.0 ★</p>
-        <p class="critical-text">"8 марта — кошмар. Нет напитков, крылышки сырые. Менеджмента нет."</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-function switchTab(tabId) {
-  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById(tabId).classList.add('active');
-  event.currentTarget.classList.add('active');
-}
-</script>
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+    </script>
 </body>
 </html>
