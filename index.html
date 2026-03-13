@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supra Dashboard - Март 2026</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --accent: #38bdf8;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --success: #22c55e;
+            --vlad-color: #6366f1;
+            --franchise-color: #ec4899;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 15px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        .stat-value { font-size: 2rem; font-weight: 700; color: var(--accent); }
+        .stat-label { color: var(--text-dim); font-size: 0.875rem; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #334155; }
+        th { color: var(--text-dim); font-weight: 500; }
+        
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+        .badge-red { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+        .badge-yellow { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+        .badge-green { background: rgba(34, 197, 94, 0.2); color: var(--success); }
+        
+        .vlad-row { border-left: 4px solid var(--vlad-color); }
+        .franchise-row { border-left: 4px solid var(--franchise-color); }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📊 Supra Dashboard <small style="font-size: 1rem; color: var(--text-dim);">Управленческий обзор сети</small></h1>
+        <div>Март 2026</div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="card"><div class="stat-label">Средний рейтинг сети</div><div class="stat-value">4.69</div></div>
+        <div class="card"><div class="stat-label">Всего отзывов</div><div class="stat-value">1,790</div></div>
+        <div class="card"><div class="stat-label">Доля негатива</div><div class="stat-value" style="color: var(--danger);">8.4%</div></div>
+        <div class="card"><div class="stat-label">Индекс боли</div><div class="stat-value" style="color: var(--warning);">29.4</div></div>
+    </div>
+
+    <div class="card" style="margin-bottom: 30px;">
+        <h3>🏪 Рейтинги по ресторанам (Детализация из скринов)</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Группа / Точка</th>
+                    <th>VL.ru</th>
+                    <th>2ГИС</th>
+                    <th>Яндекс</th>
+                    <th>Google</th>
+                    <th>Я.Доставка</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="vlad-row"><td>Центр (Фокина)</td><td>5.0</td><td>4.8</td><td>5.0</td><td>4.8</td><td>4.9</td></tr>
+                <tr class="vlad-row"><td>Меоре</td><td>5.0</td><td>4.8</td><td>4.9</td><td>4.7</td><td>4.7</td></tr>
+                <tr class="vlad-row"><td>Диди</td><td>5.0</td><td>4.7</td><td>4.9</td><td>4.7</td><td>4.8</td></tr>
+                <tr class="vlad-row"><td>Романи</td><td>5.0</td><td>4.8</td><td>4.8</td><td>4.7</td><td>4.7</td></tr>
+                <tr class="franchise-row"><td>Екатеринбург</td><td>—</td><td>4.8</td><td>5.0</td><td>4.8</td><td>4.7</td></tr>
+                <tr class="franchise-row"><td>Самара</td><td>—</td><td>4.8</td><td>4.9</td><td>4.9</td><td>4.7</td></tr>
+                <tr class="franchise-row"><td>Казань</td><td>—</td><td>4.9</td><td>5.0</td><td>4.9</td><td>4.8</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div class="card">
+            <h3>🔴 Топ-5 болевых точек</h3>
+            <table>
+                <tr><td>Диди (Бонусы)</td><td><span class="badge badge-red">КРИТИЧНО</span></td></tr>
+                <tr><td>Романи (8 марта)</td><td><span class="badge badge-red">КРИТИЧНО</span></td></tr>
+                <tr><td>ЕКБ (Банкет)</td><td><span class="badge badge-yellow">ВНИМАНИЕ</span></td></tr>
+                <tr><td>Самара (Кухня)</td><td><span class="badge badge-yellow">ВНИМАНИЕ</span></td></tr>
+                <tr><td>Меоре (Сервис)</td><td><span class="badge badge-green">НОРМА</span></td></tr>
+            </table>
+        </div>
+        <div class="card">
+            <h3>⚠️ Root Cause (Причины негатива)</h3>
+            <ul>
+                <li><strong>Скорость (41):</strong> Доставка и ожидание горячего.</li>
+                <li><strong>Персонал (30):</strong> Ошибки в брони и заказах.</li>
+                <li><strong>Кухня (29):</strong> Температура и соответствие весу.</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
